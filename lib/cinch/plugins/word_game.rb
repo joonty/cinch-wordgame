@@ -18,6 +18,7 @@ module Cinch::Plugins
     match(/word cheat/, method: :cheat)
     def cheat(m)
       m.reply "#{m.user}: really? You're giving up? Fine, the word is #{@word.word}"
+      @word = nil
     end
 
     match(/guess (\S+)/, method: :guess)
