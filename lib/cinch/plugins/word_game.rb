@@ -6,7 +6,28 @@ module Cinch::Plugins
 
     def initialize(*)
       super
-      @dict = Dictionary.from_file "/etc/dictionaries-common/words"
+      if config[:words]
+        @dict = Dictionary.new config[:words]
+      else
+        dictionary_file = config[:dictionary_file] || "/etc/dictionaries-common/words"
+        @dict = Dictionary.from_file dictionary_file
+      end
+    end
+
+    match(/word help/, method: :help)
+    def help(m)
+      m.reply <<-HELP
+Play a simple but addictive game, using words in the dictionary.
+ 
+The bot will pick a random word, and you have to work out which word by making guesses. For every guess you make, the bot will tell you whether the word comes before or after (by alphabetic sorting).
+ 
+Commands:
+!word start   - Start a new game, with the bot picking a word
+!guess <word> - Guess a word
+!word cheat   - If you simply can't carry on, use this to find out the word (and end the game)
+ 
+Have fun!
+      HELP
     end
 
     match(/word start/, method: :start)
